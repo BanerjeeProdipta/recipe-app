@@ -5,16 +5,13 @@ import reportWebVitals from './reportWebVitals';
 import App from './App';
 import { QueryClient, QueryClientProvider } from 'react-query';
 
-
 const queryClient = new QueryClient();
 ReactDOM.render(
+  <QueryClientProvider client={queryClient}>
+    <App />
+    {/* {process.env.NODE_ENV === 'development' && <ReactQueryDevtools initialIsOpen={false} />} */}
+  </QueryClientProvider>,
 
-        <QueryClientProvider client={queryClient}>
-          <App />
-          {/* {process.env.NODE_ENV === 'development' && <ReactQueryDevtools initialIsOpen={false} />} */}
-        </QueryClientProvider>
-  
- ,
   document.getElementById('root'),
 );
 
