@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-export const API_ENDPOINT = 'http://127.0.0.1:8000/api/';
+export const API_ENDPOINT = 'http://localhost:8000/api/';
 export const RecipeAppApi = axios.create({
   baseURL: API_ENDPOINT,
   headers: {

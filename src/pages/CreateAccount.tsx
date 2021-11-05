@@ -6,7 +6,6 @@ import { useHistory } from 'react-router-dom';
 import { emailRegex, lowercaseRegex, uppercaseRegex, numericRegex, specialCharRegex } from '../utils';
 import Icon from '../icons';
 import { RecipeAppApi } from '../config';
-import axios from 'axios';
 
 interface IData {
   email: string;
@@ -50,20 +49,17 @@ const CreateAccount = () => {
 
   const onSubmit = handleSubmit(async (data) => {
     try {
-      console.log(data);
-      await axios.post('http://127.0.0.1:8000/api/accounts/create/', data, {
-        headers: {
-          'Content-type': 'application/json',
-          'Access-Control-Allow-Origin': '*',
-        },
-      });
-      history.push('/app/login');
-    } catch (error: any) {}
+      await RecipeAppApi.post('accounts/create/', data);
+      history.push('/login');
+    } catch (error: any) {
+      console.log(error);
+    }
   });
 
   return (
     <div className="h-screen flex justify-center items-center">
       <form className="max-w-4xl space-y-6 rounded border p-6" onSubmit={onSubmit}>
+        <h1 className="text-xl font-bold font-leading-10">Create account</h1>
         <div>
           <p className="text-sm mb-2">Email</p>
           <div>
@@ -111,7 +107,7 @@ const CreateAccount = () => {
           <button
             disabled={!isDirty && isSubmitting}
             className={`bg-blue-800 text-white font-semibold transition duration-500 w-full py-2 rounded-full focus:outline-none ${
-              isDirty ? 'opacity-100' : 'opacity-60 cursor-not-allowed'
+              isDirty && !isSubmitting ? 'opacity-100' : 'opacity-70 cursor-not-allowed'
             }`}
           >
             {isSubmitting ? 'Creating' : 'Create'}
