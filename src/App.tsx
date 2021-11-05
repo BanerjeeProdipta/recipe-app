@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Redirect, Switch, RouteProps } from 'react-router
 import AppWithLogin from './layouts/AppWithLogin';
 import AppWithoutLogin from './layouts/AppWithoutLogin';
 import { isAuthenticate } from './utils';
+import 'react-toastify/dist/ReactToastify.css';
 
 export const PrivateRoute = ({ children, ...rest }: RouteProps) => (
   <Route

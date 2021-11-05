@@ -2,10 +2,12 @@ import React, { useState } from 'react';
 import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
-import { useHistory } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { emailRegex, lowercaseRegex, uppercaseRegex, numericRegex, specialCharRegex } from '../utils';
 import Icon from '../icons';
-import { RecipeAppApi } from '../config';
+import axios from 'axios';
+import { CustomToaster } from '../components/Toaster';
+import InputField from '../components/InputField';
 
 interface IData {
   email: string;
@@ -48,70 +50,61 @@ const CreateAccount = () => {
   });
 
   const onSubmit = handleSubmit(async (data) => {
+    console.log(data);
     try {
-      await RecipeAppApi.post('accounts/create/', data);
+      await axios.post('http://localhost:8000/api/accounts/create/', data, {
+        headers: {
+          'Content-type': 'application/json',
+          'Access-Control-Allow-Origin': '*',
+        },
+      });
       history.push('/login');
     } catch (error: any) {
-      console.log(error);
+      CustomToaster('Failed!', 'danger');
     }
   });
 
   return (
     <div className="h-screen flex justify-center items-center">
-      <form className="max-w-4xl space-y-6 rounded border p-6" onSubmit={onSubmit}>
+      <form className="max-w-6xl space-y-6 rounded-lg border border-primary p-6" onSubmit={onSubmit}>
         <h1 className="text-xl font-bold font-leading-10">Create account</h1>
-        <div>
-          <p className="text-sm mb-2">Email</p>
-          <div>
-            <input
-              {...register('email')}
-              className="w-full bg-gray-100 border focus:outline-none rounded-md p-2"
-              placeholder="Your email"
-            />
-            {errors.email && <p className="text-red-500 text-sm font-semibold mt-1">{errors.email.message}</p>}
-          </div>
+        <InputField
+          label="Email"
+          {...register('email')}
+          errorMessage={errors.email ? errors.email.message : undefined}
+        />
+        <div className="relative">
+          <span className="z-10 h-full font-normal text-center fill-current placeholder-gray-100 absolute rounded items-center justify-center w-8 right-5 pr-3 py-3">
+            <div className="cursor-pointer mt-8" onClick={togglePasswordVisibility}>
+              {passwordShown ? (
+                <Icon name="eye-visible" className="h-5 absolute top-6 left-3 text-gray-400 fill-current" />
+              ) : (
+                <Icon name="eye-hidden" className="h-5 absolute top-10 left-3 text-gray-400 fill-current" />
+              )}
+            </div>
+          </span>
+          <InputField
+            label="Password"
+            {...register('password')}
+            type={passwordShown ? 'text' : 'password'}
+            errorMessage={errors.password ? errors.password.message : undefined}
+          />
         </div>
-        <div>
-          <p className="text-sm mb-2">Password</p>
-          <div className="relative">
-            <span className="z-10 h-full font-normal text-center fill-current placeholder-gray-100 absolute rounded items-center justify-center w-8 right-5 pr-3 py-3">
-              <div className="cursor-pointer mt-8" onClick={togglePasswordVisibility}>
-                {passwordShown ? (
-                  <Icon name="eye-visible" className="h-5 absolute top-2.5 left-3 text-gray-400 fill-current" />
-                ) : (
-                  <Icon name="eye-hidden" className="h-5 absolute top-2.5 left-3 text-gray-400 fill-current" />
-                )}
-              </div>
-            </span>
-            <input
-              {...register('password')}
-              className="w-full bg-gray-100 border focus:outline-none rounded-md p-2 pr-14 mb-3"
-              placeholder="Your password"
-              type={passwordShown ? 'text' : 'password'}
-            />
-            {errors.password && <p className="text-red-500 text-sm font-semibold mt-1">{errors.password.message}</p>}
-          </div>
-        </div>
-        <div>
-          <p className="text-sm mb-2">Name</p>
-          <div>
-            <input
-              {...register('name')}
-              className="w-full bg-gray-100 border focus:outline-none rounded-md p-2"
-              placeholder="Your Name"
-            />
-            {errors.name && <p className="text-red-500 text-sm font-semibold mt-1">{errors.name.message}</p>}
-          </div>
-        </div>
+        <InputField label="Name" {...register('name')} errorMessage={errors.name ? errors.name.message : undefined} />{' '}
         <div className="flex justify-center">
           <button
             disabled={!isDirty && isSubmitting}
-            className={`bg-blue-800 text-white font-semibold transition duration-500 w-full py-2 rounded-full focus:outline-none ${
+            className={`bg-primary text-white font-semibold transition duration-500 w-full py-2 rounded-full focus:outline-none ${
               isDirty && !isSubmitting ? 'opacity-100' : 'opacity-70 cursor-not-allowed'
             }`}
           >
             {isSubmitting ? 'Creating' : 'Create'}
           </button>
+        </div>
+        <div>
+          <Link to="/login" className="text-primary text-sm text-center mt-6">
+            Login
+          </Link>
         </div>
       </form>
     </div>

@@ -16,10 +16,12 @@ export const setAccessToken = (token: string) => {
 };
 
 export function getToken() {
-  let accessToken = '';
+  let accessToken: string | null = null;
   if (typeof window !== undefined && window.localStorage.getItem('access-token')) {
     accessToken = window.localStorage.getItem('access-token');
     return accessToken;
+  } else {
+    removeAccessToken();
   }
   return accessToken;
 }

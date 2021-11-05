@@ -29,7 +29,7 @@ const validationSchema = Yup.object().shape({
 const fetchAccountDetails = async () => {
   const response = await RecipeAppApi.get(`accounts/me/`, {
     headers: {
-      'WWW-Authenticate': getToken(),
+      'WWW-Authenticate': getToken() as string,
     },
   });
   return response.data.data;
@@ -52,7 +52,7 @@ const MyProfile = () => {
     try {
       await RecipeAppApi.put(`accounts/me/`, data, {
         headers: {
-          'WWW-Authenticate': getToken(),
+          // 'WWW-Authenticate': getToken(),
         },
       });
       toast.success('Profile Updated');
