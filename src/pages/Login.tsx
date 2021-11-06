@@ -55,10 +55,10 @@ const Login = () => {
       })
       .then((response: any) => {
         setAccessToken(response.token);
-        history.push('/login');
+        history.push('/app/user/profile');
       })
       .catch((error: any) => {
-        CustomToaster(error.message || 'Failed!', 'danger');
+        CustomToaster(error.response.data.non_field_errors[0] || 'Failed!', 'danger');
       });
   });
 

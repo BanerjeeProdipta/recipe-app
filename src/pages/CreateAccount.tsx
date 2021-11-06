@@ -60,7 +60,7 @@ const CreateAccount = () => {
       CustomToaster('Account Created!', 'success');
       history.push('/login');
     } catch (error: any) {
-      CustomToaster('Failed!', 'danger');
+      CustomToaster(error.response.data.email[0] || 'Failed!', 'danger');
     }
   });
 
