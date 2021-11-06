@@ -54,7 +54,7 @@ const CreateIngredient = () => {
     <div>
       <button
         onClick={() => setShowModal(true)}
-        className="border-2 border-primary rounded-full font-semibold text-xs px-4 py-1"
+        className="border-2 border-primary rounded-sm font-semibold text-xs px-4 py-1"
       >
         Create Ingredient{' '}
       </button>
@@ -66,13 +66,13 @@ const CreateIngredient = () => {
             <button
               type="button"
               onClick={() => setShowModal(false)}
-              className="mt-6 border-2 border-primary text-primary font-semibold transition duration-500 w-full py-2 rounded-full focus:outline-none"
+              className="mt-6 border-2 border-primary text-primary font-semibold transition duration-500 w-full py-2 rounded-sm focus:outline-none"
             >
               Close
             </button>
             <button
               disabled={!isDirty && isSubmitting}
-              className={`mt-6 bg-primary text-white font-semibold transition duration-500 w-full py-2 rounded-full focus:outline-none ${
+              className={`mt-6 bg-primary text-white font-semibold transition duration-500 w-full py-2 rounded-sm focus:outline-none ${
                 isDirty ? 'opacity-100' : 'cursor-not-allowed'
               }`}
             >

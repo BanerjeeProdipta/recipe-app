@@ -21,24 +21,24 @@ const AppWithLogin = () => {
         <div className="flex justify-between items-center">
           <h1 className="text-white font-bold text-lg">Recipe App</h1>
           <div>
-            <Link to="/app/recipes" className="font-medium text-white rounded-full px-4 py-2 hover:underline">
+            <Link to="/app/recipes" className="font-medium text-white rounded-sm px-4 py-2 hover:underline">
               Recipes
             </Link>
-            <Link to="/app/user/profile" className="font-medium text-white rounded-full px-4 py-2 hover:underline">
+            <Link to="/app/user/profile" className="font-medium text-white rounded-sm px-4 py-2 hover:underline">
               Profile
             </Link>
           </div>
-          <button className="bg-primary text-white rounded-full px-4 py-2" onClick={handleLogout}>
+          <button className="bg-primary text-white rounded-sm px-4 py-2" onClick={handleLogout}>
             Logout
           </button>
         </div>
       </nav>
       <div className="flex justify-center p-6">
-        <div className="p-6 max-w-7xl border lg:w-[768px] bg-white rounded-lg shadow-md">
+        <div className="p-6 max-w-5xl container border mx-auto bg-white rounded-lg shadow-md">
           <Switch>
             <Route exact path={`${path}/user/profile`} component={MyProfile} />
-            <Route exact path={`${path}/recipes`} component={Recipe} />
-            <Route path="*" render={() => <Redirect to={`${path}/user/profile`} />} />
+            <Route path={`${path}/recipes`} component={Recipe} />
+            <Route path="*" render={() => <Redirect to={`${path}/recipes`} />} />
           </Switch>
         </div>
       </div>

@@ -98,7 +98,7 @@ const Login = () => {
         <div className="flex justify-center">
           <button
             disabled={!isDirty && isSubmitting}
-            className={`bg-primary text-white font-semibold transition duration-500 w-full py-2 rounded-full focus:outline-none ${
+            className={`bg-primary text-white font-semibold transition duration-500 w-full py-2 rounded-sm focus:outline-none ${
               isDirty ? 'opacity-100' : 'opacity-80 cursor-not-allowed'
             }`}
           >

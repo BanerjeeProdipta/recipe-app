@@ -23,12 +23,12 @@ const IngredientList = () => {
   console.log(ingredients.data);
 
   return (
-    <div className="mt-6">
+    <div>
       {ingredients.data ? (
         <div className="flex flex-wrap">
           {ingredients.data.map((ingredient) => (
             <div key={ingredient.id}>
-              <div className="px-2 rounded-full text-xs py-1 bg-primary bg-opacity-10 text-primary font-semibold mr-1 mb-2">
+              <div className="px-2 rounded-sm text-xs py-1 bg-primary bg-opacity-10 text-primary font-semibold mr-1 mb-2">
                 <p>{ingredient.name}</p>
               </div>
             </div>
