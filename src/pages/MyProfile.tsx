@@ -74,7 +74,7 @@ const MyProfile = () => {
   return (
     <div>
       {accountDetails.data ? (
-        <form onSubmit={onSubmit} className="space-y-8">
+        <form onSubmit={onSubmit} className="space-y-8 max-w-lg">
           <h1 className="text-xl font-bold font-leading-10 mb-8">My account</h1>
           <InputField
             label="Email"
@@ -82,11 +82,11 @@ const MyProfile = () => {
             errorMessage={errors.email ? errors.email.message : undefined}
           />
           <InputField label="Name" {...register('name')} errorMessage={errors.name ? errors.name.message : undefined} />{' '}
-          <div className="flex justify-center">
+          <div className="flex justify-end">
             {isDirty && (
               <button
                 disabled={!isDirty && isSubmitting}
-                className={`bg-primary text-white font-semibold transition duration-500 w-full py-2 rounded-sm focus:outline-none ${
+                className={`bg-primary text-white font-semibold transition duration-500 px-8 py-2 rounded-lg focus:outline-none ${
                   isDirty && !isSubmitting ? 'opacity-100' : 'cursor-not-allowed'
                 }`}
               >

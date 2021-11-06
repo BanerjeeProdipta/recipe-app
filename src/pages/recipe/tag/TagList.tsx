@@ -28,7 +28,7 @@ const TagList = () => {
         <div className="flex flex-wrap">
           {tags.data.map((ingredient) => (
             <div key={ingredient.id}>
-              <div className="px-2 rounded-sm text-xs py-1 bg-primary bg-opacity-10 text-primary font-semibold mr-1 mb-2">
+              <div className="px-2 rounded-lg text-xs py-1 bg-primary bg-opacity-10 text-primary font-semibold mr-1 mb-2">
                 <p>{ingredient.name}</p>
               </div>
             </div>
