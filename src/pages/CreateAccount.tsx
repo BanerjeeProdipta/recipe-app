@@ -55,7 +55,6 @@ const CreateAccount = () => {
       await axios.post('http://localhost:8000/api/accounts/create/', data, {
         headers: {
           'Content-type': 'application/json',
-          'Access-Control-Allow-Origin': '*',
         },
       });
       CustomToaster('Account Created!', 'success');

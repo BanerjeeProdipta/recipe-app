@@ -51,7 +51,6 @@ const Login = () => {
       .post('http://localhost:8000/api/accounts/token/', data, {
         headers: {
           'Content-type': 'application/json',
-          'Access-Control-Allow-Origin': '*',
         },
       })
       .then((response: any) => {
