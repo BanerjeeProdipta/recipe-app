@@ -10,8 +10,8 @@ export interface ITagResponse {
 
 export interface IRecipeCreate {
   title: string;
-  ingredients: number[];
-  tags: number[];
+  ingredients: any;
+  tags: any;
   time_minutes: number;
   price: string;
   link: string;

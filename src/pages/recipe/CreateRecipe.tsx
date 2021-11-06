@@ -13,7 +13,7 @@ import Select from 'react-select';
 
 const validationSchema = Yup.object().shape({
   title: Yup.string().trim().required('Required'),
-  // ingredients: Yup.array().required('Required'),
+  ingredients: Yup.array().required('Required'),
   // tags: Yup.array().required('Required'),
   time_minutes: Yup.number().typeError('Required').required('Required'),
   price: Yup.number().typeError('Required').required('Required'),
@@ -42,12 +42,8 @@ const fetchTags = async () => {
 const CreateRecipe = () => {
   const queryClient = useQueryClient();
   const history = useHistory();
-  const [selectedIngredients, setSelectedIngredients] = useState<{ id: number }[]>();
+  const [selectedIngredients, setSelectedIngredients] = useState<{ value: number; label: string }[]>();
   const [selectedTags, setSelectedTags] = useState<{ id: number }[]>();
-
-  const handleIngredientChange = (value: any) => {
-    setSelectedIngredients(value.map((v: { label: string; value: number }) => v.value));
-  };
 
   const handleTagChange = useCallback((value: any) => {
     setSelectedTags(value.map((v: { label: string; value: number }) => v.value));
@@ -63,6 +59,7 @@ const CreateRecipe = () => {
 
   const {
     register,
+    setValue,
     handleSubmit,
     control,
     reset,
@@ -74,6 +71,14 @@ const CreateRecipe = () => {
       title: '',
     },
   });
+
+  const handleIngredientChange = (ingredientsSelected: any) => {
+    // setSelectedIngredients(value);
+    setValue(
+      'ingredients',
+      ingredientsSelected.map((ingredient: { value: number; label: string }) => ingredient.value),
+    );
+  };
 
   const onSubmit = handleSubmit(async (data) => {
     console.log(data);
@@ -103,7 +108,7 @@ const CreateRecipe = () => {
         />
 
         <div>
-          <p className="font-semibold text-sm mb-2">Ingredients * </p>
+          <p className={`font-semibold text-sm mb-2 ${errors.ingredients && 'text-red-500'} `}>Ingredients * </p>
           <Select
             isMulti
             options={ingredients?.data?.map((v) => ({
@@ -112,7 +117,12 @@ const CreateRecipe = () => {
             }))}
             onChange={handleIngredientChange}
             placeholder="Search Ingredients"
+            className={`w-full rounded-lg border border-transparent focus:outline-none focus:ring-2 focus:border-transparent ${
+              errors.ingredients ? 'border-red-500 focus:ring-red-500' : 'focus:ring-primary'
+            }`}
           />
+
+          {errors.ingredients && <p className="text-red-500 text-xs mt-1">{errors.ingredients.message}</p>}
         </div>
 
         <div>
