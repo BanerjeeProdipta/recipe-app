@@ -2,54 +2,42 @@ import React, { useCallback, useState } from 'react';
 import axios from 'axios';
 import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-import AsyncSelect from 'react-select/async';
 import InputField from '../../components/InputField';
 import { IIngredientResponse, IRecipeCreate, ITagResponse } from '../../types';
 import { getToken } from '../../utils';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { CustomToaster } from '../../components/Toaster';
-import { useQueryClient } from 'react-query';
+import { useQuery, useQueryClient } from 'react-query';
 import { useHistory } from 'react-router';
+import Select from 'react-select';
 
 const validationSchema = Yup.object().shape({
   title: Yup.string().trim().required('Required'),
-  // ingredients: number[];
-  // tags: number[];
-  time_minutes: Yup.number().required('Required'),
-  price: Yup.number().required('Required'),
+  ingredients: Yup.array().required('Required'),
+  tags: Yup.array().required('Required'),
+  time_minutes: Yup.number().typeError('Required').required('Required'),
+  price: Yup.number().typeError('Required').required('Required'),
 });
 
-const loadIngredientOptions = async (inputText: string, callback: any) => {
+const fetchIngredients = async () => {
   const response = await axios.get(`http://127.0.0.1:8000/api/recipe/ingredients/`, {
     headers: {
       'Content-type': 'application/json',
       Authorization: `Token ${getToken() as string}`,
     },
   });
-  const data: IIngredientResponse[] = response.data;
-  return callback(
-    data.map((v) => ({
-      label: v.name,
-      value: v.id,
-    })),
-  );
+  return response.data;
 };
 
-// const loadTagOptions = async (callback: any) => {
-//   const response = await axios.get(`http://127.0.0.1:8000/api/recipe/tags/`, {
-//     headers: {
-//       'Content-type': 'application/json',
-//       Authorization: `Token ${getToken() as string}`,
-//     },
-//   });
-//   const data: ITagResponse[] = response.data;
-//   return callback(
-//     data.map((v) => ({
-//       label: v.name,
-//       value: v.id,
-//     })),
-//   );
-// };
+const fetchTags = async () => {
+  const response = await axios.get(`http://127.0.0.1:8000/api/recipe/tags/`, {
+    headers: {
+      'Content-type': 'application/json',
+      Authorization: `Token ${getToken() as string}`,
+    },
+  });
+  return response.data;
+};
 
 const CreateRecipe = () => {
   const queryClient = useQueryClient();
@@ -57,17 +45,26 @@ const CreateRecipe = () => {
   const [selectedIngredients, setSelectedIngredients] = useState<{ id: number }[]>();
   const [selectedTags, setSelectedTags] = useState<{ id: number }[]>();
 
-  const handleIngredientChange = useCallback((value: any) => {
-    setSelectedIngredients(value);
-  }, []);
+  const handleIngredientChange = (value: any) => {
+    setSelectedIngredients(value.map((v: { label: string; value: number }) => v.value));
+  };
 
   const handleTagChange = useCallback((value: any) => {
-    setSelectedTags(value);
+    setSelectedTags(value.map((v: { label: string; value: number }) => v.value));
   }, []);
+
+  const ingredients = useQuery<IIngredientResponse[], Error>(['ingredients'], () => fetchIngredients(), {
+    refetchOnWindowFocus: false,
+  });
+
+  const tags = useQuery<ITagResponse[], Error>(['tags'], () => fetchTags(), {
+    refetchOnWindowFocus: false,
+  });
 
   const {
     register,
     handleSubmit,
+    control,
     reset,
     formState: { errors, isSubmitting, isDirty },
   } = useForm<IRecipeCreate>({
@@ -79,8 +76,6 @@ const CreateRecipe = () => {
   });
 
   const onSubmit = handleSubmit(async (data) => {
-    console.log(data);
-
     // try {
     //   await axios.post('http://127.0.0.1:8000/api/recipe/recipes/', data, {
     //     headers: {
@@ -108,29 +103,31 @@ const CreateRecipe = () => {
 
         <div>
           <p className="font-semibold text-sm mb-2">Ingredients * </p>
-          <AsyncSelect
+
+          <Select
             isMulti
-            name="ingredient"
-            cacheOptions={true}
-            value={selectedIngredients}
-            loadOptions={loadIngredientOptions}
+            options={ingredients?.data?.map((v) => ({
+              label: v.name,
+              value: v.id,
+            }))}
             onChange={handleIngredientChange}
-            placeholder="Select Ingredients"
+            placeholder="Search Ingredients"
           />
         </div>
 
-        {/* <div>
+        <div>
           <p className="font-semibold text-sm mb-2">Tags * </p>
-          <AsyncSelect
+          <Select
             isMulti
-            name="tag"
-            cacheOptions={true}
-            value={selectedTags}
-            loadOptions={loadTagOptions}
+            name="tags"
+            options={tags?.data?.map((v) => ({
+              label: v.name,
+              value: v.id,
+            }))}
             onChange={handleTagChange}
-            placeholder="Select Tags"
+            placeholder="Search Tags"
           />
-        </div> */}
+        </div>
 
         <InputField
           label="Time in minutes *"
@@ -149,6 +146,7 @@ const CreateRecipe = () => {
         />
 
         <InputField label="Link" type="number" min={0} {...register('link')} />
+
         <div className="flex justify-between space-x-4">
           <button
             type="button"

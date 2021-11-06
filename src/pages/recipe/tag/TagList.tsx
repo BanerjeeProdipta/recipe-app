@@ -2,7 +2,7 @@ import axios from 'axios';
 import React from 'react';
 import { useQuery } from 'react-query';
 import { getToken } from '../../../utils';
-import { IIngredientResponse } from '../../../types';
+import { ITagResponse } from '../../../types';
 import { CircularProgress } from '@material-ui/core';
 
 const fetchTags = async () => {
@@ -16,11 +16,9 @@ const fetchTags = async () => {
 };
 
 const TagList = () => {
-  const tags = useQuery<IIngredientResponse[], Error>(['tags'], () => fetchTags(), {
+  const tags = useQuery<ITagResponse[], Error>(['tags'], () => fetchTags(), {
     refetchOnWindowFocus: false,
   });
-
-  console.log(tags.data);
 
   return (
     <div>

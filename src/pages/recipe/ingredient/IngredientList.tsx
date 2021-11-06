@@ -20,8 +20,6 @@ const IngredientList = () => {
     refetchOnWindowFocus: false,
   });
 
-  console.log(ingredients.data);
-
   return (
     <div>
       {ingredients.data ? (
