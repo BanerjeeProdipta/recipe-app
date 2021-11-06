@@ -54,7 +54,8 @@ const Login = () => {
         },
       })
       .then((response: any) => {
-        setAccessToken(response.token);
+        console.log(response.data);
+        setAccessToken(response.data.token);
         history.push('/app/user/profile');
       })
       .catch((error: any) => {

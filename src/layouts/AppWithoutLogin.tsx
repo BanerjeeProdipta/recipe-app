@@ -5,13 +5,11 @@ import Login from '../pages/Login';
 
 const AppWithoutLogin = () => {
   return (
-    <div className="p-6">
-      <Switch>
-        <Route exact path="/" component={Login} />
-        <Route exact path="/user/create" component={CreateAccount} />
-        <Route path="*" render={() => <Redirect to={`/`} />} />
-      </Switch>
-    </div>
+    <Switch>
+      <Route exact path="/" component={Login} />
+      <Route exact path="/user/create" component={CreateAccount} />
+      <Route path="*" render={() => <Redirect to={`/`} />} />
+    </Switch>
   );
 };
 
