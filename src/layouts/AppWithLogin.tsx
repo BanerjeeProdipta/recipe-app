@@ -34,7 +34,7 @@ const AppWithLogin = () => {
         </div>
       </nav>
       <div className="flex justify-center p-6">
-        <div className="p-6 max-w-7xl border lg:w-[768px] border-primary rounded-lg shadow-md">
+        <div className="p-6 max-w-7xl border lg:w-[768px] bg-white rounded-lg shadow-md">
           <Switch>
             <Route exact path={`${path}/user/profile`} component={MyProfile} />
             <Route exact path={`${path}/recipes`} component={Recipe} />

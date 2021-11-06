@@ -1,16 +1,28 @@
 import React from 'react';
-import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
+import CreateRecipe from './CreateRecipe';
+import CreateIngredient from './ingredient/CreateIngredient';
+import IngredientList from './ingredient/IngredientList';
 import RecipeList from './RecipeList';
+import CreateTag from './tag/CreateTag';
+import TagList from './tag/TagList';
 
 const Recipe = () => {
-  const { path } = useRouteMatch();
-
   return (
     <div>
-      <Switch>
-        <Route exact path={`${path}`} component={RecipeList} />
-        <Route path="*" render={() => <Redirect to={`${path}`} />} />
-      </Switch>
+      <div className="flex flex-wrap">
+        <div className="w-32">
+          <CreateIngredient />
+          <IngredientList />
+          <CreateTag />
+          <TagList />
+        </div>
+        <div className="flex-1">
+          <div>
+            <CreateRecipe />
+            <RecipeList />
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
