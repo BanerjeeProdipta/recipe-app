@@ -47,18 +47,20 @@ const Login = () => {
   });
 
   const onSubmit = handleSubmit(async (data) => {
-    try {
-      let response: { token: string } = await axios.post('http://localhost:8000/api/accounts/token/', data, {
+    await axios
+      .post('http://localhost:8000/api/accounts/token/', data, {
         headers: {
           'Content-type': 'application/json',
           'Access-Control-Allow-Origin': '*',
         },
+      })
+      .then((response: any) => {
+        setAccessToken(response.token);
+        history.push('/login');
+      })
+      .catch((error: any) => {
+        CustomToaster(error.message || 'Failed!', 'danger');
       });
-      setAccessToken(response.token);
-      history.push('app/users/my-profile');
-    } catch (error: any) {
-      CustomToaster('Failed!', 'danger');
-    }
   });
 
   return (
@@ -112,4 +114,5 @@ const Login = () => {
     </div>
   );
 };
+
 export default Login;

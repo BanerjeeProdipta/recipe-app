@@ -58,6 +58,7 @@ const CreateAccount = () => {
           'Access-Control-Allow-Origin': '*',
         },
       });
+      CustomToaster('Account Created!', 'success');
       history.push('/login');
     } catch (error: any) {
       CustomToaster('Failed!', 'danger');
