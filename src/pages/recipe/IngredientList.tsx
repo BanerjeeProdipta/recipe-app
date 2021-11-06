@@ -24,13 +24,15 @@ const IngredientList = () => {
   return (
     <div className="mt-6">
       {ingredients.data ? (
-        ingredients.data.map((ingredient) => (
-          <div key={ingredient.id} className="flex flex-wrap space-x-2">
-            <div className="px-4 rounded-full text-xs py-1 bg-primary text-white">
-              <p>{ingredient.name}</p>
+        <div className="flex flex-wrap">
+          {ingredients.data.map((ingredient) => (
+            <div key={ingredient.id}>
+              <div className="px-2 rounded-full text-xs py-1 bg-primary text-white mr-1 mb-2">
+                <p>{ingredient.name}</p>
+              </div>
             </div>
-          </div>
-        ))
+          ))}
+        </div>
       ) : (
         <p>No ingredients available.</p>
       )}
