@@ -77,7 +77,7 @@ const CreateAccount = () => {
           <span className="z-10 h-full font-normal text-center fill-current placeholder-gray-100 absolute rounded items-center justify-center w-8 right-5 pr-3 py-3">
             <div className="cursor-pointer mt-8" onClick={togglePasswordVisibility}>
               {passwordShown ? (
-                <Icon name="eye-visible" className="h-5 absolute top-6 left-3 text-gray-400 fill-current" />
+                <Icon name="eye-visible" className="h-5 absolute top-10 left-3 text-gray-400 fill-current" />
               ) : (
                 <Icon name="eye-hidden" className="h-5 absolute top-10 left-3 text-gray-400 fill-current" />
               )}
