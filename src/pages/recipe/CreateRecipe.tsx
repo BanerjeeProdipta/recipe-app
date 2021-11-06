@@ -13,8 +13,8 @@ import Select from 'react-select';
 
 const validationSchema = Yup.object().shape({
   title: Yup.string().trim().required('Required'),
-  ingredients: Yup.array().required('Required'),
-  tags: Yup.array().required('Required'),
+  // ingredients: Yup.array().required('Required'),
+  // tags: Yup.array().required('Required'),
   time_minutes: Yup.number().typeError('Required').required('Required'),
   price: Yup.number().typeError('Required').required('Required'),
 });
@@ -76,6 +76,7 @@ const CreateRecipe = () => {
   });
 
   const onSubmit = handleSubmit(async (data) => {
+    console.log(data);
     // try {
     //   await axios.post('http://127.0.0.1:8000/api/recipe/recipes/', data, {
     //     headers: {
@@ -103,7 +104,6 @@ const CreateRecipe = () => {
 
         <div>
           <p className="font-semibold text-sm mb-2">Ingredients * </p>
-
           <Select
             isMulti
             options={ingredients?.data?.map((v) => ({
@@ -145,7 +145,7 @@ const CreateRecipe = () => {
           errorMessage={errors.price ? errors.price.message : undefined}
         />
 
-        <InputField label="Link" type="number" min={0} {...register('link')} />
+        <InputField label="Link" {...register('link')} />
 
         <div className="flex justify-between space-x-4">
           <button
