@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, Redirect, Route, Switch, useHistory, useRouteMatch } from 'react-router-dom';
+import { NavLink, Redirect, Route, Switch, useHistory, useRouteMatch } from 'react-router-dom';
 import MyProfile from '../pages/MyProfile';
 import Recipe from '../pages/recipe';
 import { removeAccessToken } from '../utils';
@@ -17,16 +17,24 @@ const AppWithLogin = () => {
 
   return (
     <div>
-      <nav className="sticky top-0 bg-gray-900 py-2 z-50 shadow-lg px-4">
+      <nav className="sticky top-0 bg-white py-2 z-50 shadow-lg px-4">
         <div className="flex justify-between items-center">
-          <h1 className="text-white font-bold text-lg">Recipe App</h1>
+          <h1 className="text-black font-bold text-lg">Recipe App</h1>
           <div>
-            <Link to="/app/recipes" className="font-medium text-white rounded-lg px-4 py-2 hover:underline">
+            <NavLink
+              to="/app/recipes"
+              activeClassName="text-primary"
+              className="font-medium text-black rounded-lg px-4 py-2 hover:underline"
+            >
               Recipes
-            </Link>
-            <Link to="/app/user/profile" className="font-medium text-white rounded-lg px-4 py-2 hover:underline">
+            </NavLink>
+            <NavLink
+              to="/app/user/profile"
+              activeClassName="text-primary"
+              className="font-medium text-black rounded-lg px-4 py-2 hover:underline"
+            >
               Profile
-            </Link>
+            </NavLink>
           </div>
           <button className="bg-primary text-white rounded-lg px-4 py-2" onClick={handleLogout}>
             Logout

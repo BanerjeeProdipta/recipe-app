@@ -40,7 +40,7 @@ export const CustomModal: React.FC<props> = ({ open, onClose, children, title })
       disableEnforceFocus
     >
       <Fade in={open}>
-        <div className="bg-white rounded-2xl border focus:outline-none">
+        <div className="bg-white rounded-full border focus:outline-none">
           <div className="w-auto">
             <div className="flex justify-between items-center px-6 py-4">
               <p className="font-semibold text-xl pr-4">{title}</p>

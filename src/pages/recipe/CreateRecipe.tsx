@@ -14,7 +14,7 @@ import Select from 'react-select';
 const validationSchema = Yup.object().shape({
   title: Yup.string().trim().required('Required'),
   ingredients: Yup.array().required('Required'),
-  // tags: Yup.array().required('Required'),
+  tags: Yup.array().required('Required'),
   time_minutes: Yup.number().typeError('Required').required('Required'),
   price: Yup.number().typeError('Required').required('Required'),
 });
@@ -42,12 +42,7 @@ const fetchTags = async () => {
 const CreateRecipe = () => {
   const queryClient = useQueryClient();
   const history = useHistory();
-  const [selectedIngredients, setSelectedIngredients] = useState<{ value: number; label: string }[]>();
   const [selectedTags, setSelectedTags] = useState<{ id: number }[]>();
-
-  const handleTagChange = useCallback((value: any) => {
-    setSelectedTags(value.map((v: { label: string; value: number }) => v.value));
-  }, []);
 
   const ingredients = useQuery<IIngredientResponse[], Error>(['ingredients'], () => fetchIngredients(), {
     refetchOnWindowFocus: false,
@@ -73,28 +68,35 @@ const CreateRecipe = () => {
   });
 
   const handleIngredientChange = (ingredientsSelected: any) => {
-    // setSelectedIngredients(value);
     setValue(
       'ingredients',
       ingredientsSelected.map((ingredient: { value: number; label: string }) => ingredient.value),
     );
   };
 
+  const handleTagChange = (tagsSelected: any) => {
+    setValue(
+      'tags',
+      tagsSelected.map((tag: { value: number; label: string }) => tag.value),
+    );
+  };
+
   const onSubmit = handleSubmit(async (data) => {
     console.log(data);
-    // try {
-    //   await axios.post('http://127.0.0.1:8000/api/recipe/recipes/', data, {
-    //     headers: {
-    //       'Content-type': 'application/json',
-    //       Authorization: `Token ${getToken() as string}`,
-    //     },
-    //   });
-    //   CustomToaster('Recipe Created!', 'success');
-    //   queryClient.invalidateQueries(['recipes']);
-    //   reset();
-    // } catch (error: any) {
-    //   CustomToaster('Failed!', 'danger');
-    // }
+    try {
+      await axios.post('http://127.0.0.1:8000/api/recipe/recipes/', data, {
+        headers: {
+          'Content-type': 'application/json',
+          Authorization: `Token ${getToken() as string}`,
+        },
+      });
+      CustomToaster('Recipe Created!', 'success');
+      queryClient.invalidateQueries(['recipes']);
+      reset();
+      history.push('/app/recipes');
+    } catch (error: any) {
+      CustomToaster('Failed!', 'danger');
+    }
   });
 
   return (
@@ -117,7 +119,7 @@ const CreateRecipe = () => {
             }))}
             onChange={handleIngredientChange}
             placeholder="Search Ingredients"
-            className={`w-full rounded-lg border border-transparent focus:outline-none focus:ring-2 focus:border-transparent ${
+            className={`w-full rounded-lg border focus:outline-none focus:ring-2 focus:border-transparent ${
               errors.ingredients ? 'border-red-500 focus:ring-red-500' : 'focus:ring-primary'
             }`}
           />
@@ -126,7 +128,7 @@ const CreateRecipe = () => {
         </div>
 
         <div>
-          <p className="font-semibold text-sm mb-2">Tags * </p>
+          <p className={`font-semibold text-sm mb-2 ${errors.tags && 'text-red-500'} `}>Tags * </p>
           <Select
             isMulti
             name="tags"
@@ -136,7 +138,12 @@ const CreateRecipe = () => {
             }))}
             onChange={handleTagChange}
             placeholder="Search Tags"
+            className={`w-full rounded-lg border focus:outline-none focus:ring-2 focus:border-transparent ${
+              errors.tags ? 'border-red-500 focus:ring-red-500' : 'focus:ring-primary'
+            }`}
           />
+
+          {errors.tags && <p className="text-red-500 text-xs mt-1">{errors.tags.message}</p>}
         </div>
 
         <InputField
