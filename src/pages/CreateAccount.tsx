@@ -66,7 +66,7 @@ const CreateAccount = () => {
 
   return (
     <div className="h-screen flex justify-center items-center">
-      <form className="max-w-6xl space-y-6 rounded-lg border border-primary p-6" onSubmit={onSubmit}>
+      <form className="max-w-6xl space-y-6 rounded-lg border border-primary p-6 bg-white" onSubmit={onSubmit}>
         <h1 className="text-xl font-bold font-leading-10">Create account</h1>
         <InputField
           label="Email"
