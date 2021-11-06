@@ -17,14 +17,14 @@ const AppWithLogin = () => {
 
   return (
     <div>
-      <nav className="sticky top-0 bg-white py-2 z-50 shadow-lg px-4">
+      <nav className="sticky top-0 bg-gray-900 py-2 z-50 shadow-lg px-4">
         <div className="flex justify-between items-center">
-          <h1 className="text-primary font-bold text-lg">Recipe App</h1>
+          <h1 className="text-white font-bold text-lg">Recipe App</h1>
           <div>
-            <Link to="/app/recipes" className="font-bold text-primary rounded-full px-4 py-2 hover:underline">
+            <Link to="/app/recipes" className="font-medium text-white rounded-full px-4 py-2 hover:underline">
               Recipes
             </Link>
-            <Link to="/app/user/profile" className="font-bold text-primary rounded-full px-4 py-2 hover:underline">
+            <Link to="/app/user/profile" className="font-medium text-white rounded-full px-4 py-2 hover:underline">
               Profile
             </Link>
           </div>

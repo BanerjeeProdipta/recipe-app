@@ -25,16 +25,18 @@ export const PrivateRoute = ({ children, ...rest }: RouteProps) => (
 
 function App() {
   return (
-    <BrowserRouter>
-      <Switch>
-        <PrivateRoute path="/app">
-          <AppWithLogin />
-        </PrivateRoute>
-        <Route path="*">
-          <AppWithoutLogin />
-        </Route>
-      </Switch>
-    </BrowserRouter>
+    <div className="min-h-screen bg-gray-800 text-white">
+      <BrowserRouter>
+        <Switch>
+          <PrivateRoute path="/app">
+            <AppWithLogin />
+          </PrivateRoute>
+          <Route path="*">
+            <AppWithoutLogin />
+          </Route>
+        </Switch>
+      </BrowserRouter>
+    </div>
   );
 }
 

@@ -51,7 +51,7 @@ export const CustomModal: React.FC<props> = ({ open, onClose, children, title })
                 <Icon name="cross" className="h-4 fill-current text-black stroke-current stroke-1" />
               </div>
             </div>
-            <div className="overflow-auto p-6" style={{ maxHeight: '70vh' }}>
+            <div className="overflow-auto px-6 pb-6" style={{ maxHeight: '70vh' }}>
               {children}
             </div>
           </div>

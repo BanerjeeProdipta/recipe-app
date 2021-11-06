@@ -1,11 +1,12 @@
 import axios from 'axios';
 import React from 'react';
 import { useQuery } from 'react-query';
-import { getToken } from '../../utils';
-import { IIngredientResponse } from '../../utils/interfaces';
+import { getToken } from '../../../utils';
+import { IIngredientResponse } from '../../../utils/interfaces';
+import { CircularProgress } from '@material-ui/core';
 
-const fetchIngredients = async () => {
-  const response = await axios.get(`http://127.0.0.1:8000/api/recipe/ingredients/`, {
+const fetchTags = async () => {
+  const response = await axios.get(`http://127.0.0.1:8000/api/recipe/tags/`, {
     headers: {
       'Content-type': 'application/json',
       Authorization: `Token ${getToken() as string}`,
@@ -14,18 +15,18 @@ const fetchIngredients = async () => {
   return response.data;
 };
 
-const IngredientList = () => {
-  const ingredients = useQuery<IIngredientResponse[], Error>(['ingredients'], () => fetchIngredients(), {
+const TagList = () => {
+  const tags = useQuery<IIngredientResponse[], Error>(['tags'], () => fetchTags(), {
     refetchOnWindowFocus: false,
   });
 
-  console.log(ingredients.data);
+  console.log(tags.data);
 
   return (
     <div className="mt-6">
-      {ingredients.data ? (
+      {tags.data ? (
         <div className="flex flex-wrap">
-          {ingredients.data.map((ingredient) => (
+          {tags.data.map((ingredient) => (
             <div key={ingredient.id}>
               <div className="px-2 rounded-full text-xs py-1 bg-primary text-white mr-1 mb-2">
                 <p>{ingredient.name}</p>
@@ -33,11 +34,13 @@ const IngredientList = () => {
             </div>
           ))}
         </div>
+      ) : tags.isLoading ? (
+        <CircularProgress />
       ) : (
-        <p>No ingredients available.</p>
+        <p>No tags available.</p>
       )}
     </div>
   );
 };
 
-export default IngredientList;
+export default TagList;

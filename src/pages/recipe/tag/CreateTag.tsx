@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { CustomToaster } from '../../components/Toaster';
+import { CustomToaster } from '../../../components/Toaster';
 import axios from 'axios';
-import InputField from '../../components/InputField';
+import InputField from '../../../components/InputField';
 import { useForm } from 'react-hook-form';
-import { CustomModal } from '../../components/CustomModal';
-import { getToken } from '../../utils';
+import { CustomModal } from '../../../components/CustomModal';
+import { getToken } from '../../../utils';
+import { useQueryClient } from 'react-query';
 
 interface IData {
   name: string;
@@ -16,12 +17,14 @@ const validationSchema = Yup.object().shape({
   name: Yup.string().trim().required('Required'),
 });
 
-const CreateIngredient = () => {
+const CreateTag = () => {
+  const queryClient = useQueryClient();
   const [showModal, setShowModal] = useState(false);
 
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors, isSubmitting, isDirty },
   } = useForm<IData>({
     resolver: yupResolver(validationSchema),
@@ -33,13 +36,15 @@ const CreateIngredient = () => {
 
   const onSubmit = handleSubmit(async (data) => {
     try {
-      await axios.post('http://127.0.0.1:8000/api/recipe/ingredients/', data, {
+      await axios.post('http://127.0.0.1:8000/api/recipe/tags/', data, {
         headers: {
           'Content-type': 'application/json',
           Authorization: `Token ${getToken() as string}`,
         },
       });
       CustomToaster('Ingredient Created!', 'success');
+      queryClient.invalidateQueries(['tag']);
+      reset();
     } catch (error: any) {
       CustomToaster('Failed!', 'danger');
     }
@@ -49,11 +54,11 @@ const CreateIngredient = () => {
     <div>
       <button
         onClick={() => setShowModal(true)}
-        className="border-2 border-primary rounded-full font-semibold px-4 py-1"
+        className="border-2 border-primary rounded-full font-semibold text-xs px-4 py-1"
       >
-        Create Ingredient{' '}
+        Create Tag{' '}
       </button>
-      <CustomModal open={showModal} onClose={() => setShowModal(false)} title="Create Ingredient">
+      <CustomModal open={showModal} onClose={() => setShowModal(false)} title="Create Tag">
         <form onSubmit={onSubmit}>
           <InputField label="Name" {...register('name')} errorMessage={errors.name ? errors.name.message : undefined} />
 
@@ -63,12 +68,12 @@ const CreateIngredient = () => {
               onClick={() => setShowModal(false)}
               className="mt-6 border-2 border-primary text-primary font-semibold transition duration-500 w-full py-2 rounded-full focus:outline-none"
             >
-              Finish
+              Close
             </button>
             <button
               disabled={!isDirty && isSubmitting}
               className={`mt-6 bg-primary text-white font-semibold transition duration-500 w-full py-2 rounded-full focus:outline-none ${
-                isDirty ? 'opacity-100' : 'opacity-70 cursor-not-allowed'
+                isDirty ? 'opacity-100' : 'cursor-not-allowed'
               }`}
             >
               {isSubmitting ? 'Creating' : 'Create'}
@@ -80,4 +85,4 @@ const CreateIngredient = () => {
   );
 };
 
-export default CreateIngredient;
+export default CreateTag;
