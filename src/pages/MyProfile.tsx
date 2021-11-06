@@ -20,11 +20,10 @@ const validationSchema = Yup.object().shape({
   email: Yup.string().trim().lowercase().required('Required').matches(emailRegex, 'Invalid email format'),
 });
 
-console.log(getToken());
-console.log(`Token ${getToken() as string}`);
 const fetchAccountDetails = async () => {
   const response = await axios.get(`http://127.0.0.1:8000/api/accounts/me/`, {
     headers: {
+      'Content-type': 'application/json',
       Authorization: `Token ${getToken() as string}`,
     },
   });
@@ -61,6 +60,7 @@ const MyProfile = () => {
       //! Not getting Password on GET So used PATCH for updating account information
       await axios.patch(`http://127.0.0.1:8000/api/accounts/me/`, data, {
         headers: {
+          'Content-type': 'application/json',
           Authorization: `Token ${getToken() as string}`,
         },
       });
@@ -75,7 +75,7 @@ const MyProfile = () => {
     <div>
       {accountDetails.data ? (
         <form onSubmit={onSubmit} className="space-y-8">
-          <h1 className="text-xl font-bold font-leading-10 mb-8">Your account</h1>
+          <h1 className="text-xl font-bold font-leading-10 mb-8">My account</h1>
           <InputField
             label="Email"
             {...register('email')}

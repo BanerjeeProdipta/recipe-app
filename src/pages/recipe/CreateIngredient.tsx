@@ -36,12 +36,12 @@ const CreateIngredient = () => {
       await axios.post('http://127.0.0.1:8000/api/recipe/ingredients/', data, {
         headers: {
           'Content-type': 'application/json',
-          'WWW-Authenticate': getToken() as string,
+          Authorization: `Token ${getToken() as string}`,
         },
       });
       CustomToaster('Ingredient Created!', 'success');
     } catch (error: any) {
-      //   CustomToaster(error.response.data.email[0] || 'Failed!', 'danger');
+      CustomToaster('Failed!', 'danger');
     }
   });
 
@@ -51,17 +51,24 @@ const CreateIngredient = () => {
         onClick={() => setShowModal(true)}
         className="border-2 border-primary rounded-full font-semibold px-4 py-1"
       >
-        Create Ingredients{' '}
+        Create Ingredient{' '}
       </button>
-      <CustomModal open={showModal} onClose={() => setShowModal(false)} title="Create Ingredients">
+      <CustomModal open={showModal} onClose={() => setShowModal(false)} title="Create Ingredient">
         <form onSubmit={onSubmit}>
           <InputField label="Name" {...register('name')} errorMessage={errors.name ? errors.name.message : undefined} />
 
-          <div className="flex justify-center">
+          <div className="flex justify-center space-x-4">
+            <button
+              type="button"
+              onClick={() => setShowModal(false)}
+              className="mt-6 border-2 border-primary text-primary font-semibold transition duration-500 w-full py-2 rounded-full focus:outline-none"
+            >
+              Finish
+            </button>
             <button
               disabled={!isDirty && isSubmitting}
               className={`mt-6 bg-primary text-white font-semibold transition duration-500 w-full py-2 rounded-full focus:outline-none ${
-                isDirty && !isSubmitting ? 'opacity-100' : 'opacity-70 cursor-not-allowed'
+                isDirty ? 'opacity-100' : 'opacity-70 cursor-not-allowed'
               }`}
             >
               {isSubmitting ? 'Creating' : 'Create'}

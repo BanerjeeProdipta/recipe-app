@@ -99,7 +99,7 @@ const Login = () => {
           <button
             disabled={!isDirty && isSubmitting}
             className={`bg-primary text-white font-semibold transition duration-500 w-full py-2 rounded-full focus:outline-none ${
-              isDirty && !isSubmitting ? 'opacity-100' : 'opacity-80 cursor-not-allowed'
+              isDirty ? 'opacity-100' : 'opacity-80 cursor-not-allowed'
             }`}
           >
             {isSubmitting ? 'Logging in' : 'Log in'}
