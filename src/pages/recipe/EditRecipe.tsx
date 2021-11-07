@@ -11,6 +11,7 @@ import { useQuery, useQueryClient } from 'react-query';
 import { useHistory, useParams } from 'react-router';
 import Select from 'react-select';
 import { CircularProgress } from '@material-ui/core';
+import UploadRecipeImage from './UploadRecipeImage';
 
 interface params {
   id: string;
@@ -165,97 +166,99 @@ const EditRecipe = () => {
     }
   });
 
-  console.log('isDirty', isDirty, 'isSubmitting', isSubmitting);
-
   return (
-    <div className="w-full lg:max-w-md">
+    <div className="w-full">
       <h1 className="text-2xl font-bold mb-2">Recipe Details</h1>
       <span className="font-medium italic text-gray-400 text-xs">Please change the information to update.</span>
+
       {recipe.data ? (
-        <form onSubmit={onSubmit} className="lg:w-96 space-y-6 mt-4">
-          <InputField
-            label="Title *"
-            {...register('title')}
-            errorMessage={errors.title ? errors.title.message : undefined}
-          />
-
-          <div>
-            <p className={`font-semibold text-sm mb-2 ${errors.ingredients && 'text-red-500'} `}>Ingredients * </p>
-            <Select
-              isMulti
-              name="ingredients"
-              options={ingredients?.data?.map((v) => ({
-                label: v.name,
-                value: v.id,
-              }))}
-              value={selectedIngredients}
-              onChange={handleIngredientChange}
-              placeholder="Search Ingredients"
-              className={`w-full rounded-lg border focus:outline-none focus:ring-2 focus:border-transparent ${
-                errors.ingredients ? 'border-red-500 focus:ring-red-500' : 'focus:ring-primary'
-              }`}
+        <div className="lg:flex lg:space-x-6 space-y-6 lg:space-y-0 mt-4">
+          <form onSubmit={onSubmit} className="w-full space-y-6">
+            <InputField
+              label="Title *"
+              {...register('title')}
+              errorMessage={errors.title ? errors.title.message : undefined}
             />
 
-            {errors.ingredients && <p className="text-red-500 text-xs mt-1">Required</p>}
-          </div>
-
-          <div>
-            <p className={`font-semibold text-sm mb-2 ${errors.tags && 'text-red-500'} `}>Tags * </p>
-            <Select
-              isMulti
-              name="tags"
-              options={tags?.data?.map((v) => ({
-                label: v.name,
-                value: v.id,
-              }))}
-              value={selectedTags}
-              onChange={handleTagChange}
-              placeholder="Search Tags"
-              className={`w-full rounded-lg border focus:outline-none focus:ring-2 focus:border-transparent ${
-                errors.tags ? 'border-red-500 focus:ring-red-500' : 'focus:ring-primary'
-              }`}
-            />
-
-            {errors.tags && <p className="text-red-500 text-xs mt-1">Required</p>}
-          </div>
-
-          <InputField
-            label="Time in minutes *"
-            type="number"
-            min={0}
-            {...register('time_minutes')}
-            errorMessage={errors.time_minutes ? errors.time_minutes.message : undefined}
-          />
-
-          <InputField
-            label="Price *"
-            type="number"
-            min={0}
-            {...register('price')}
-            errorMessage={errors.price ? errors.price.message : undefined}
-          />
-
-          <InputField label="Link" {...register('link')} />
-          {isDirty && (
-            <div className="flex justify-between space-x-4">
-              <button
-                type="button"
-                onClick={() => history.push('/app/recipes')}
-                className="mt-6 border-2 border-primary text-primary font-semibold transition duration-500 w-full py-2 rounded-lg focus:outline-none"
-              >
-                Cancel
-              </button>
-              <button
-                disabled={!isDirty && isSubmitting}
-                className={`mt-6 bg-primary text-white font-semibold transition duration-500 w-full py-2 rounded-lg focus:outline-none ${
-                  isDirty ? 'opacity-100' : 'cursor-not-allowed'
+            <div>
+              <p className={`font-semibold text-sm mb-2 ${errors.ingredients && 'text-red-500'} `}>Ingredients * </p>
+              <Select
+                isMulti
+                name="ingredients"
+                options={ingredients?.data?.map((v) => ({
+                  label: v.name,
+                  value: v.id,
+                }))}
+                value={selectedIngredients}
+                onChange={handleIngredientChange}
+                placeholder="Search Ingredients"
+                className={`w-full rounded-lg border focus:outline-none focus:ring-2 focus:border-transparent ${
+                  errors.ingredients ? 'border-red-500 focus:ring-red-500' : 'focus:ring-primary'
                 }`}
-              >
-                {isSubmitting ? 'Updating' : 'Update'}
-              </button>
+              />
+
+              {errors.ingredients && <p className="text-red-500 text-xs mt-1">Required</p>}
             </div>
-          )}
-        </form>
+
+            <div>
+              <p className={`font-semibold text-sm mb-2 ${errors.tags && 'text-red-500'} `}>Tags * </p>
+              <Select
+                isMulti
+                name="tags"
+                options={tags?.data?.map((v) => ({
+                  label: v.name,
+                  value: v.id,
+                }))}
+                value={selectedTags}
+                onChange={handleTagChange}
+                placeholder="Search Tags"
+                className={`w-full rounded-lg border focus:outline-none focus:ring-2 focus:border-transparent ${
+                  errors.tags ? 'border-red-500 focus:ring-red-500' : 'focus:ring-primary'
+                }`}
+              />
+
+              {errors.tags && <p className="text-red-500 text-xs mt-1">Required</p>}
+            </div>
+
+            <InputField
+              label="Time in minutes *"
+              type="number"
+              min={0}
+              {...register('time_minutes')}
+              errorMessage={errors.time_minutes ? errors.time_minutes.message : undefined}
+            />
+
+            <InputField
+              label="Price *"
+              type="number"
+              min={0}
+              {...register('price')}
+              errorMessage={errors.price ? errors.price.message : undefined}
+            />
+
+            <InputField label="Link" {...register('link')} />
+            {isDirty && (
+              <div className="flex justify-between space-x-4">
+                <button
+                  type="button"
+                  onClick={() => history.push('/app/recipes')}
+                  className="mt-6 border-2 border-primary text-primary font-semibold transition duration-500 w-full py-2 rounded-lg focus:outline-none"
+                >
+                  Cancel
+                </button>
+                <button
+                  disabled={!isDirty && isSubmitting}
+                  className={`mt-6 bg-primary text-white font-semibold transition duration-500 w-full py-2 rounded-lg focus:outline-none ${
+                    isDirty ? 'opacity-100' : 'cursor-not-allowed'
+                  }`}
+                >
+                  {isSubmitting ? 'Updating' : 'Update'}
+                </button>
+              </div>
+            )}
+          </form>
+          <UploadRecipeImage recipeId={recipe.data?.id} />
+        </div>
       ) : recipe.isLoading ? (
         <div className="h-96 flex justify-center items-center">
           <CircularProgress />
