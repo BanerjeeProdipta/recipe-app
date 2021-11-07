@@ -19,7 +19,7 @@ interface params {
 const validationSchema = Yup.object().shape({
   title: Yup.string().trim().required('Required'),
   ingredients: Yup.array().min(1, 'Required').required('Required'),
-  tags: Yup.array().required('Required'),
+  tags: Yup.array().min(1, 'Required').required('Required'),
   time_minutes: Yup.number().typeError('Required').required('Required'),
   price: Yup.number().typeError('Required').required('Required'),
 });
