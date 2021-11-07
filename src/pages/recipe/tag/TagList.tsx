@@ -18,6 +18,7 @@ const fetchTags = async () => {
 const TagList = () => {
   const tags = useQuery<ITagResponse[], Error>(['tags'], () => fetchTags(), {
     refetchOnWindowFocus: false,
+    enabled: getToken() ? true : false,
   });
 
   return (

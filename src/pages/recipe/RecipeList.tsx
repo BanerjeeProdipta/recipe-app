@@ -45,14 +45,17 @@ const RecipeList = () => {
 
   const recipes = useQuery<IRecipeResponse[], Error>(['recipes'], () => fetchRecipes(), {
     refetchOnWindowFocus: false,
+    enabled: getToken() ? true : false,
   });
 
   const ingredients = useQuery<IIngredientResponse[], Error>(['ingredients'], () => fetchIngredients(), {
     refetchOnWindowFocus: false,
+    enabled: getToken() ? true : false,
   });
 
   const tags = useQuery<ITagResponse[], Error>(['tags'], () => fetchTags(), {
     refetchOnWindowFocus: false,
+    enabled: getToken() ? true : false,
   });
 
   const populateIngredients = (recipe: IRecipeResponse) => {

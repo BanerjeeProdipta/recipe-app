@@ -36,6 +36,7 @@ const MyProfile = () => {
 
   const accountDetails = useQuery<IData, Error>(['account-details'], () => fetchAccountDetails(), {
     refetchOnWindowFocus: false,
+    enabled: getToken() ? true : false,
     onSuccess: async (data) => {
       // * set default values
       reset({

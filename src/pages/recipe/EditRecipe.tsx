@@ -63,14 +63,17 @@ const EditRecipe = () => {
 
   const ingredients = useQuery<IIngredientResponse[], Error>(['ingredients'], () => fetchIngredients(), {
     refetchOnWindowFocus: false,
+    enabled: getToken() ? true : false,
   });
 
   const tags = useQuery<ITagResponse[], Error>(['tags'], () => fetchTags(), {
     refetchOnWindowFocus: false,
+    enabled: getToken() ? true : false,
   });
 
   const recipe = useQuery<IRecipeResponse, Error>(['recipe', params.id], () => fetchRecipe(params.id), {
     refetchOnWindowFocus: false,
+    enabled: getToken() ? true : false,
     retry: 1,
     onSuccess: async (data) => {
       // * set default values

@@ -18,6 +18,7 @@ const fetchIngredients = async () => {
 const IngredientList = () => {
   const ingredients = useQuery<IIngredientResponse[], Error>(['ingredients'], () => fetchIngredients(), {
     refetchOnWindowFocus: false,
+    enabled: getToken() ? true : false,
   });
 
   return (

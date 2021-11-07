@@ -45,10 +45,12 @@ const CreateRecipe = () => {
 
   const ingredients = useQuery<IIngredientResponse[], Error>(['ingredients'], () => fetchIngredients(), {
     refetchOnWindowFocus: false,
+    enabled: getToken() ? true : false,
   });
 
   const tags = useQuery<ITagResponse[], Error>(['tags'], () => fetchTags(), {
     refetchOnWindowFocus: false,
+    enabled: getToken() ? true : false,
   });
 
   const {

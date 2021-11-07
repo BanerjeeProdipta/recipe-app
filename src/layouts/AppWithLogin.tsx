@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { NavLink, Redirect, Route, Switch, useHistory, useRouteMatch } from 'react-router-dom';
 import MyProfile from '../pages/MyProfile';
 import Recipe from '../pages/recipe';
-import { removeAccessToken } from '../utils';
+import { getToken, removeAccessToken } from '../utils';
 
 const AppWithLogin = () => {
   const { path } = useRouteMatch();
@@ -14,6 +14,13 @@ const AppWithLogin = () => {
   };
 
   // TODO Check if user is logged in
+
+  useEffect(() => {
+    const authorize = () => {
+      if (!getToken()) history.replace('/');
+    };
+    authorize();
+  }, [history]);
 
   return (
     <div>
