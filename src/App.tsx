@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Redirect, Switch, RouteProps } from 'react-router
 import AppWithLogin from './layouts/AppWithLogin';
 import AppWithoutLogin from './layouts/AppWithoutLogin';
 import { isAuthenticate } from './utils';
+import 'react-toastify/dist/ReactToastify.css';
 
 export const PrivateRoute = ({ children, ...rest }: RouteProps) => (
   <Route
@@ -13,7 +14,7 @@ export const PrivateRoute = ({ children, ...rest }: RouteProps) => (
       ) : (
         <Redirect
           to={{
-            pathname: '/login',
+            pathname: '/',
             state: { from: { pathname: location.pathname } },
           }}
         />
@@ -24,16 +25,18 @@ export const PrivateRoute = ({ children, ...rest }: RouteProps) => (
 
 function App() {
   return (
-    <BrowserRouter>
-      <Switch>
-        <PrivateRoute path="/app">
-          <AppWithLogin />
-        </PrivateRoute>
-        <Route path="*">
-          <AppWithoutLogin />
-        </Route>
-      </Switch>
-    </BrowserRouter>
+    <div className="min-h-screen bg-gray-100">
+      <BrowserRouter>
+        <Switch>
+          <PrivateRoute path="/app">
+            <AppWithLogin />
+          </PrivateRoute>
+          <Route path="*">
+            <AppWithoutLogin />
+          </Route>
+        </Switch>
+      </BrowserRouter>
+    </div>
   );
 }
 
