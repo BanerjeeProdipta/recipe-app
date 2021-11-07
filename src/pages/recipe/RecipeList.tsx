@@ -124,15 +124,20 @@ const RecipeList = () => {
               <div key={recipe.id} className="border rounded-md my-2 p-4">
                 <div className="flex justify-between items-center">
                   <h1 className="font-medium text-lg mb-2">{recipe.title}</h1>
-                  <button
-                    className="text-red-600 font-bold text-xs"
-                    onClick={() => {
-                      setShowModal(true);
-                      setRecipeToDelete(recipe);
-                    }}
-                  >
-                    Delete
-                  </button>
+                  <div className="flex items-center">
+                    <Link to={`/app/recipes/${recipe.id}/edit`} className="text-primary font-bold text-sm mr-1">
+                      Edit
+                    </Link>
+                    <button
+                      className="text-red-600 font-bold text-sm"
+                      onClick={() => {
+                        setShowModal(true);
+                        setRecipeToDelete(recipe);
+                      }}
+                    >
+                      Delete
+                    </button>
+                  </div>
                 </div>
                 <div>{populateIngredients(recipe)}</div>
                 <div>{populateTags(recipe)}</div>

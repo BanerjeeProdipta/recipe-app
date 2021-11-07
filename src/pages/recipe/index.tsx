@@ -1,6 +1,7 @@
 import React from 'react';
 import { Redirect, Route, Switch, useRouteMatch } from 'react-router';
 import CreateRecipe from './CreateRecipe';
+import EditRecipe from './EditRecipe';
 import RecipeList from './RecipeList';
 import Sidebar from './Sidebar';
 
@@ -14,6 +15,7 @@ const Recipe = () => {
         <Switch>
           <Route exact path={`${path}`} component={RecipeList} />
           <Route exact path={`${path}/create`} component={CreateRecipe} />
+          <Route exact path={`${path}/:id/edit`} component={EditRecipe} />
           <Route path="*" render={() => <Redirect to={`${path}/recipes`} />} />
         </Switch>
       </div>

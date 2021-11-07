@@ -98,7 +98,7 @@ const CreateRecipe = () => {
   });
 
   return (
-    <div>
+    <div className="w-full lg:max-w-md">
       <h1 className="text-2xl font-bold mb-6">Create Recipe</h1>
       <form onSubmit={onSubmit} className="lg:w-96 space-y-6">
         <InputField

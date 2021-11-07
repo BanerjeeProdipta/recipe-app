@@ -26,3 +26,13 @@ export interface IRecipeResponse {
   price: string;
   link: string;
 }
+
+export interface IRecipeEdit {
+  id: number;
+  title: string;
+  ingredients: number[];
+  tags: number[];
+  time_minutes: number;
+  price: string;
+  link: string;
+}
