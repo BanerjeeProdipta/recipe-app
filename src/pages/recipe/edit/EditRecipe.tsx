@@ -22,7 +22,7 @@ const validationSchema = Yup.object().shape({
   ingredients: Yup.array().min(1, 'Required').required('Required'),
   tags: Yup.array().min(1, 'Required').required('Required'),
   time_minutes: Yup.number().typeError('Required').required('Required'),
-  price: Yup.number().typeError('Required').required('Required'),
+  price: Yup.number().max(99999, 'Can not be more than 5 digits.').typeError('Required').required('Required'),
 });
 
 const fetchRecipe = async (id: string) => {
@@ -236,25 +236,21 @@ const EditRecipe = () => {
               errorMessage={errors.price ? errors.price.message : undefined}
             />
 
-            {isDirty && (
-              <div className="flex justify-between space-x-4">
-                <button
-                  type="button"
-                  onClick={() => history.push('/app/recipes')}
-                  className="mt-6 border-2 border-primary text-primary font-semibold transition duration-500 w-full py-2 rounded-lg focus:outline-none"
-                >
-                  Cancel
-                </button>
-                <button
-                  disabled={!isDirty && isSubmitting}
-                  className={`mt-6 bg-primary text-white font-semibold transition duration-500 w-full py-2 rounded-lg focus:outline-none ${
-                    isDirty ? 'opacity-100' : 'cursor-not-allowed'
-                  }`}
-                >
-                  {isSubmitting ? 'Updating' : 'Update'}
-                </button>
-              </div>
-            )}
+            <div className="flex justify-between space-x-4">
+              <button
+                type="button"
+                onClick={() => history.push('/app/recipes')}
+                className="mt-6 border-2 border-primary text-primary font-semibold transition duration-500 w-full py-2 rounded-lg focus:outline-none"
+              >
+                Cancel
+              </button>
+              <button
+                disabled={!isDirty && isSubmitting}
+                className={`mt-6 bg-primary text-white font-semibold transition duration-500 w-full py-2 rounded-lg focus:outline-none`}
+              >
+                {isSubmitting ? 'Updating' : 'Update'}
+              </button>
+            </div>
           </form>
           <UploadRecipeImage recipeId={recipe.data?.id} recipeImage={recipe.data.link} />
         </div>

@@ -99,15 +99,18 @@ const UploadRecipeImage = ({ recipeId, recipeImage }: props) => {
             type="file"
             onChange={handleChangePictureFile}
           />
-          {picture && (
-            <img
-              className="h-40 w-80 object-cover border mr-4"
-              src={picture && URL.createObjectURL(picture)}
-              alt="Recipe"
-            />
-          )}
 
-          {recipeImage && <img className="h-40 w-80 object-cover border mr-4" src={recipeImage} alt="Recipe" />}
+          {recipeImage ? (
+            <img className="h-40 w-80 object-cover border mr-4" src={recipeImage} alt="Recipe" />
+          ) : (
+            picture && (
+              <img
+                className="h-40 w-80 object-cover border mr-4"
+                src={picture && URL.createObjectURL(picture)}
+                alt="Recipe"
+              />
+            )
+          )}
 
           <div className="flex flex-col space-y-2 sm:flex-row sm:space-y-0 sm:space-x-2 mt-1">
             {picture ? (

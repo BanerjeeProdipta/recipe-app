@@ -23,15 +23,20 @@ const IngredientList = () => {
 
   return (
     <div>
-      {ingredients.data ? (
-        <div className="flex flex-wrap">
-          {ingredients.data.map((ingredient) => (
-            <div key={ingredient.id}>
-              <div className="px-2 rounded-lg text-xs py-1 bg-primary bg-opacity-10 text-primary font-semibold mr-1 mb-2">
-                <p>{ingredient.name}</p>
+      {ingredients.data && ingredients.data.length > 0 ? (
+        <div>
+          <p className="text-xs font-bold mb-4">
+            Total: <span className="text-primary">{ingredients.data.length}</span>
+          </p>
+          <div className="flex flex-wrap">
+            {ingredients.data.map((ingredient) => (
+              <div key={ingredient.id}>
+                <div className="px-2 rounded-lg text-xs py-1 bg-primary bg-opacity-10 text-primary font-semibold mr-1 mb-2">
+                  <p>{ingredient.name}</p>
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       ) : ingredients.isLoading ? (
         <CircularProgress />
