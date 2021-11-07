@@ -2,15 +2,15 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-import InputField from '../../../components/InputField';
-import { IIngredientResponse, IRecipeCreate, ITagResponse } from '../../../types';
 import { getToken } from '../../../utils';
 import { useForm } from 'react-hook-form';
-import { CustomToaster } from '../../../components/Toaster';
 import { useQuery, useQueryClient } from 'react-query';
 import { useHistory } from 'react-router';
 import Select from 'react-select';
 import { LinearProgress } from '@material-ui/core';
+import InputField from '../../../components/InputField';
+import { CustomToaster } from '../../../components/Toaster';
+import { IIngredientResponse, ITagResponse, IRecipeCreate } from '../../../types';
 
 const validationSchema = Yup.object().shape({
   title: Yup.string().trim().required('Required'),
