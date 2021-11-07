@@ -40,12 +40,12 @@ export const CustomModal: React.FC<props> = ({ open, onClose, children, title })
       disableEnforceFocus
     >
       <Fade in={open}>
-        <div className="bg-white rounded-full border focus:outline-none">
+        <div className="bg-white rounded-lg border focus:outline-none">
           <div className="w-auto">
             <div className="flex justify-between items-center px-6 py-4">
               <p className="font-semibold text-xl pr-4">{title}</p>
               <div
-                className="cursor-pointer bg-white border border-gray-100 inline-block p-2.5 rounded-lg shadow-md hover:shadow-lg transition duration-300 ease-in-out"
+                className="cursor-pointer bg-white border border-gray-100 inline-block p-2.5 rounded-full shadow-md hover:shadow-lg transition duration-300 ease-in-out"
                 onClick={onClose}
               >
                 <Icon name="cross" className="h-4 fill-current text-black stroke-current stroke-1" />

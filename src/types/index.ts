@@ -16,3 +16,13 @@ export interface IRecipeCreate {
   price: string;
   link: string;
 }
+
+export interface IRecipeResponse {
+  id: number;
+  title: string;
+  ingredients: number[];
+  tags: number[];
+  time_minutes: number;
+  price: string;
+  link: string;
+}

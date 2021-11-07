@@ -1,11 +1,11 @@
-import React, { useCallback, useState } from 'react';
+import React from 'react';
 import axios from 'axios';
 import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import InputField from '../../components/InputField';
 import { IIngredientResponse, IRecipeCreate, ITagResponse } from '../../types';
 import { getToken } from '../../utils';
-import { Controller, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { CustomToaster } from '../../components/Toaster';
 import { useQuery, useQueryClient } from 'react-query';
 import { useHistory } from 'react-router';
@@ -42,7 +42,6 @@ const fetchTags = async () => {
 const CreateRecipe = () => {
   const queryClient = useQueryClient();
   const history = useHistory();
-  const [selectedTags, setSelectedTags] = useState<{ id: number }[]>();
 
   const ingredients = useQuery<IIngredientResponse[], Error>(['ingredients'], () => fetchIngredients(), {
     refetchOnWindowFocus: false,
@@ -56,7 +55,6 @@ const CreateRecipe = () => {
     register,
     setValue,
     handleSubmit,
-    control,
     reset,
     formState: { errors, isSubmitting, isDirty },
   } = useForm<IRecipeCreate>({
