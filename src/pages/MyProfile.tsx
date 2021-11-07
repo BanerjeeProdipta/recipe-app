@@ -3,11 +3,10 @@ import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { emailRegex, getToken } from '../utils';
 import { useForm } from 'react-hook-form';
-import { toast } from 'react-toastify';
-import { useHistory } from 'react-router';
-import { useQuery } from 'react-query';
+import { useQuery, useQueryClient } from 'react-query';
 import InputField from '../components/InputField';
 import axios from 'axios';
+import { CustomToaster } from '../components/Toaster';
 
 interface IData {
   name: string;
@@ -16,7 +15,6 @@ interface IData {
 
 const validationSchema = Yup.object().shape({
   name: Yup.string().trim().required('Required'),
-
   email: Yup.string().trim().lowercase().required('Required').matches(emailRegex, 'Invalid email format'),
 });
 
@@ -27,13 +25,11 @@ const fetchAccountDetails = async () => {
       Authorization: `Token ${getToken() as string}`,
     },
   });
-  console.log(response.data);
   return response.data;
 };
 
 const MyProfile = () => {
-  const history = useHistory();
-
+  const queryClient = useQueryClient();
   const accountDetails = useQuery<IData, Error>(['account-details'], () => fetchAccountDetails(), {
     refetchOnWindowFocus: false,
     enabled: getToken() ? true : false,
@@ -53,7 +49,11 @@ const MyProfile = () => {
     formState: { errors, isSubmitting, isDirty },
   } = useForm<IData>({
     resolver: yupResolver(validationSchema),
-    mode: 'onBlur',
+    mode: 'onChange',
+    defaultValues: {
+      name: '',
+      email: '',
+    },
   });
 
   const onSubmit = handleSubmit(async (data) => {
@@ -65,10 +65,10 @@ const MyProfile = () => {
           Authorization: `Token ${getToken() as string}`,
         },
       });
-      toast.success('Profile Updated');
-      history.push('/app/agents');
+      queryClient.invalidateQueries(['account-details']);
+      CustomToaster('Profile Updated', 'success');
     } catch (error: any) {
-      toast.error(error?.response?.data?.message || 'Something went wrong!');
+      CustomToaster('Failed', 'danger');
     }
   });
 
