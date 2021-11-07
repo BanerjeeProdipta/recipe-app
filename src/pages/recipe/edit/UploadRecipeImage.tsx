@@ -2,18 +2,22 @@ import { LinearProgress } from '@material-ui/core';
 import axios from 'axios';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { CustomToaster } from '../../components/Toaster';
-import { getToken } from '../../utils';
+import { useQueryClient } from 'react-query';
+import { CustomToaster } from '../../../components/Toaster';
+import { getToken } from '../../../utils';
+const FormData = require('form-data');
 
 interface props {
   recipeId: number;
+  recipeImage: string;
 }
 
-const UploadRecipeImage = ({ recipeId }: props) => {
+const UploadRecipeImage = ({ recipeId, recipeImage }: props) => {
   const [isPictureLoading, setPictureLoading] = useState(false);
   const [pictureProgress, setPictureProgress] = useState(0);
   const [picture, setPicture] = useState<File>();
   const [pictureError, setPictureError] = useState<string>();
+  const queryClient = useQueryClient();
 
   const handleChangePictureFile = async (event: React.ChangeEvent<HTMLInputElement>) => {
     setPicture(undefined);
@@ -40,19 +44,21 @@ const UploadRecipeImage = ({ recipeId }: props) => {
     setPictureError(undefined);
   };
 
-  const {
-    handleSubmit,
-    formState: { isSubmitting },
-  } = useForm();
+  const { handleSubmit } = useForm();
 
   const onSubmit = handleSubmit(async () => {
     try {
       setPictureProgress(0);
       if (picture) {
         setPictureLoading(true);
-        await axios.post(
+
+        const formData = new FormData();
+        formData.append('id', recipeId);
+        formData.append('image', picture);
+
+        const res = await axios.post(
           `http://127.0.0.1:8000/api/recipe/recipes/${recipeId}/recipe-upload-image/`,
-          { image: picture },
+          formData,
           {
             headers: {
               'Content-type': 'multipart/form-data',
@@ -61,11 +67,23 @@ const UploadRecipeImage = ({ recipeId }: props) => {
           },
         );
 
+        await axios.patch(
+          `http://127.0.0.1:8000/api/recipe/recipes/${recipeId}/`,
+          { link: res.data.image },
+          {
+            headers: {
+              'Content-type': 'application/json',
+              Authorization: `Token ${getToken() as string}`,
+            },
+          },
+        );
+        queryClient.invalidateQueries(['recipe']);
+        queryClient.invalidateQueries(['recipes']);
         CustomToaster('Profile updated.', 'success');
         handleResetPicture();
       }
     } catch (error: any) {
-      CustomToaster(error.response.data.detail || 'Image Upload Failed.', 'danger');
+      CustomToaster('Image Upload Failed.', 'danger');
     }
   });
 
@@ -75,7 +93,6 @@ const UploadRecipeImage = ({ recipeId }: props) => {
         <h2 className="font-semibold text-sm">Recipe Image</h2>
         <div>
           <input
-            // enctype="multipart/form-data"
             accept="image/"
             className="hidden"
             id="browse-picture-file-button"
@@ -84,11 +101,13 @@ const UploadRecipeImage = ({ recipeId }: props) => {
           />
           {picture && (
             <img
-              className="h-40 w-60 object-cover border mr-4"
+              className="h-40 w-80 object-cover border mr-4"
               src={picture && URL.createObjectURL(picture)}
               alt="Recipe"
             />
           )}
+
+          {recipeImage && <img className="h-40 w-80 object-cover border mr-4" src={recipeImage} alt="Recipe" />}
 
           <div className="flex flex-col space-y-2 sm:flex-row sm:space-y-0 sm:space-x-2 mt-1">
             {picture ? (

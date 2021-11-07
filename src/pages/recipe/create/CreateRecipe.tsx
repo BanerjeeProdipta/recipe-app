@@ -1,15 +1,16 @@
-import React from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-import InputField from '../../components/InputField';
-import { IIngredientResponse, IRecipeCreate, ITagResponse } from '../../types';
-import { getToken } from '../../utils';
+import InputField from '../../../components/InputField';
+import { IIngredientResponse, IRecipeCreate, ITagResponse } from '../../../types';
+import { getToken } from '../../../utils';
 import { useForm } from 'react-hook-form';
-import { CustomToaster } from '../../components/Toaster';
+import { CustomToaster } from '../../../components/Toaster';
 import { useQuery, useQueryClient } from 'react-query';
 import { useHistory } from 'react-router';
 import Select from 'react-select';
+import { LinearProgress } from '@material-ui/core';
 
 const validationSchema = Yup.object().shape({
   title: Yup.string().trim().required('Required'),
@@ -40,6 +41,10 @@ const fetchTags = async () => {
 };
 
 const CreateRecipe = () => {
+  const [isPictureLoading, setPictureLoading] = useState(false);
+  const [pictureProgress, setPictureProgress] = useState(0);
+  const [picture, setPicture] = useState<File>();
+  const [pictureError, setPictureError] = useState<string>();
   const queryClient = useQueryClient();
   const history = useHistory();
 
@@ -52,6 +57,31 @@ const CreateRecipe = () => {
     refetchOnWindowFocus: false,
     enabled: getToken() ? true : false,
   });
+
+  const handleChangePictureFile = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    setPicture(undefined);
+    if (event.target.files) {
+      const image = event.target.files[0];
+      event.target.value = '';
+      if (image) {
+        if (!['image/webp', 'image/png', 'image/jpeg', 'image/jpg'].includes(image.type)) {
+          setPictureError('Only png, webp, jpg, and jpeg is allowed.');
+          return;
+        } else {
+          setPicture(image);
+          setPictureError(undefined);
+          return;
+        }
+      }
+    }
+  };
+
+  const handleResetPicture = () => {
+    setPictureLoading(false);
+    setPictureProgress(0);
+    setPicture(undefined);
+    setPictureError(undefined);
+  };
 
   const {
     register,
@@ -84,12 +114,48 @@ const CreateRecipe = () => {
   const onSubmit = handleSubmit(async (data) => {
     console.log(data);
     try {
-      await axios.post('http://127.0.0.1:8000/api/recipe/recipes/', data, {
+      const res = await axios.post('http://127.0.0.1:8000/api/recipe/recipes/', data, {
         headers: {
           'Content-type': 'application/json',
           Authorization: `Token ${getToken() as string}`,
         },
       });
+      let recipeId = res.data.id;
+
+      if (picture) {
+        setPictureLoading(true);
+
+        const formData = new FormData();
+        formData.append('id', recipeId);
+        formData.append('image', picture);
+
+        const imageUploadResponse = await axios.post(
+          `http://127.0.0.1:8000/api/recipe/recipes/${recipeId}/recipe-upload-image/`,
+          formData,
+          {
+            headers: {
+              'Content-type': 'multipart/form-data',
+              Authorization: `Token ${getToken() as string}`,
+            },
+          },
+        );
+
+        await axios.patch(
+          `http://127.0.0.1:8000/api/recipe/recipes/${recipeId}/`,
+          { link: imageUploadResponse.data.image },
+          {
+            headers: {
+              'Content-type': 'application/json',
+              Authorization: `Token ${getToken() as string}`,
+            },
+          },
+        );
+        queryClient.invalidateQueries(['recipe']);
+        queryClient.invalidateQueries(['recipes']);
+
+        handleResetPicture();
+      }
+
       CustomToaster('Recipe Created!', 'success');
       queryClient.invalidateQueries(['recipes']);
       reset();
@@ -161,8 +227,56 @@ const CreateRecipe = () => {
           {...register('price')}
           errorMessage={errors.price ? errors.price.message : undefined}
         />
+        <div className="space-y-1">
+          <h2 className="font-semibold text-sm">Recipe Image</h2>
+          <div>
+            <input
+              accept="image/"
+              className="hidden"
+              id="browse-picture-file-button"
+              type="file"
+              onChange={handleChangePictureFile}
+            />
+            {picture && (
+              <img
+                className="h-40 w-80 object-cover border mr-4"
+                src={picture && URL.createObjectURL(picture)}
+                alt="Recipe"
+              />
+            )}
 
-        <InputField label="Link" {...register('link')} />
+            <div className="flex flex-col space-y-2 sm:flex-row sm:space-y-0 sm:space-x-2 mt-1">
+              {picture ? (
+                <div className="flex justify-between items-center">
+                  <button
+                    onClick={handleResetPicture}
+                    className="border-2 bg-gray-200 px-3 rounded-lg font-medium py-2 mr-4"
+                  >
+                    Delete
+                  </button>
+                  <button className="px-3 rounded-lg font-medium py-2 border-2 border-primary text-primary">
+                    Submit
+                  </button>
+                </div>
+              ) : (
+                <label htmlFor="browse-picture-file-button" className="w-full">
+                  <div className="border-2 border-primary px-3 cursor-pointer text-center bg-primary text-white rounded-lg font-medium py-2">
+                    Browse
+                  </div>
+                </label>
+              )}
+            </div>
+          </div>
+          {isPictureLoading && (
+            <div className="flex items-center">
+              <div className="flex-grow">
+                <LinearProgress variant="determinate" value={pictureProgress} />
+              </div>
+              <p className="text-typGreen text-sm ml-2 font-semibold">{`${pictureProgress}%`}</p>
+            </div>
+          )}
+          {pictureError && <p className="text-red-500 text-sm font-semibold">{pictureError}</p>}
+        </div>
 
         <div className="flex justify-between space-x-4">
           <button

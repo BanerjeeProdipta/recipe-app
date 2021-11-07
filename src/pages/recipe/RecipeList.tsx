@@ -141,17 +141,26 @@ const RecipeList = () => {
                     </button>
                   </div>
                 </div>
-                <div>{populateIngredients(recipe)}</div>
-                <div>{populateTags(recipe)}</div>
-                <div>
-                  <p>
-                    <span className="text-primary font-medium">Price:</span>
-                    <span className="text-sm font-semibold"> $ {recipe.price}</span>
-                  </p>
-                  <p>
-                    <span className="text-primary font-medium">Time:</span>
-                    <span className="text-sm font-semibold"> {recipe.time_minutes} min</span>
-                  </p>
+                <div className="lg:flex justify-between">
+                  <div>
+                    <div>{populateIngredients(recipe)}</div>
+                    <div>{populateTags(recipe)}</div>
+                    <div>
+                      <p>
+                        <span className="text-primary font-medium">Price:</span>
+                        <span className="text-sm font-semibold"> $ {recipe.price}</span>
+                      </p>
+                      <p>
+                        <span className="text-primary font-medium">Time:</span>
+                        <span className="text-sm font-semibold"> {recipe.time_minutes} min</span>
+                      </p>
+                    </div>
+                  </div>
+                  <div>
+                    {recipe.link && (
+                      <img className="h-56 w-96 object-cover border p-2" src={recipe.link} alt="Recipe" />
+                    )}
+                  </div>
                 </div>
               </div>
             ))}

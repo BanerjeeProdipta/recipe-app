@@ -1,7 +1,7 @@
 import React from 'react';
 import { Redirect, Route, Switch, useRouteMatch } from 'react-router';
-import CreateRecipe from './CreateRecipe';
-import EditRecipe from './EditRecipe';
+import CreateRecipe from './create/CreateRecipe';
+import EditRecipe from './edit/EditRecipe';
 import RecipeList from './RecipeList';
 import Sidebar from './Sidebar';
 

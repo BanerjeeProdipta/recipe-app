@@ -2,16 +2,16 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-import InputField from '../../components/InputField';
-import { IIngredientResponse, IRecipeEdit, IRecipeResponse, ITagResponse } from '../../types';
-import { getToken } from '../../utils';
 import { useForm } from 'react-hook-form';
-import { CustomToaster } from '../../components/Toaster';
 import { useQuery, useQueryClient } from 'react-query';
 import { useHistory, useParams } from 'react-router';
 import Select from 'react-select';
 import { CircularProgress } from '@material-ui/core';
 import UploadRecipeImage from './UploadRecipeImage';
+import InputField from '../../../components/InputField';
+import { CustomToaster } from '../../../components/Toaster';
+import { IIngredientResponse, ITagResponse, IRecipeResponse, IRecipeEdit } from '../../../types';
+import { getToken } from '../../../utils';
 
 interface params {
   id: string;
@@ -236,7 +236,6 @@ const EditRecipe = () => {
               errorMessage={errors.price ? errors.price.message : undefined}
             />
 
-            <InputField label="Link" {...register('link')} />
             {isDirty && (
               <div className="flex justify-between space-x-4">
                 <button
@@ -257,7 +256,7 @@ const EditRecipe = () => {
               </div>
             )}
           </form>
-          <UploadRecipeImage recipeId={recipe.data?.id} />
+          <UploadRecipeImage recipeId={recipe.data?.id} recipeImage={recipe.data.link} />
         </div>
       ) : recipe.isLoading ? (
         <div className="h-96 flex justify-center items-center">
