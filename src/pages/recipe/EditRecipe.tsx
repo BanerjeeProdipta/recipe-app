@@ -18,7 +18,7 @@ interface params {
 
 const validationSchema = Yup.object().shape({
   title: Yup.string().trim().required('Required'),
-  ingredients: Yup.array().required('Required'),
+  ingredients: Yup.array().min(1, 'Required').required('Required'),
   tags: Yup.array().required('Required'),
   time_minutes: Yup.number().typeError('Required').required('Required'),
   price: Yup.number().typeError('Required').required('Required'),
@@ -71,6 +71,7 @@ const EditRecipe = () => {
 
   const recipe = useQuery<IRecipeResponse, Error>(['recipe', params.id], () => fetchRecipe(params.id), {
     refetchOnWindowFocus: false,
+    retry: 1,
     onSuccess: async (data) => {
       // * set default values
       let ingredientsArray: { label: string; value: number }[] = [];
@@ -83,14 +84,8 @@ const EditRecipe = () => {
         });
       }
 
-      if (ingredientsArray) {
-        setValue(
-          'ingredients',
-          ingredientsArray.map((ingredient: { value: number; label: string }) => ingredient.value),
-        );
-
-        setSelectedIngredients(ingredientsArray);
-      }
+      data.ingredients = ingredientsArray.map((ingredient: { value: number; label: string }) => ingredient.value);
+      setSelectedIngredients(ingredientsArray);
 
       let tagsArray: { label: string; value: number }[] = [];
       if (data.tags.length > 0) {
@@ -102,15 +97,8 @@ const EditRecipe = () => {
         });
       }
 
-      if (tagsArray) {
-        setValue(
-          'tags',
-          tagsArray.map((tag: { value: number; label: string }) => tag.value),
-        );
-
-        setSelectedTags(selectedTags);
-      }
-      console.log(tagsArray);
+      data.tags = tagsArray.map((tag: { value: number; label: string }) => tag.value);
+      setSelectedTags(tagsArray);
 
       reset({
         title: data.title,
@@ -118,6 +106,7 @@ const EditRecipe = () => {
         tags: data.tags,
         time_minutes: data.time_minutes,
         price: data.price,
+        link: data.link,
       });
     },
   });
@@ -133,6 +122,8 @@ const EditRecipe = () => {
     mode: 'onBlur',
     defaultValues: {
       title: '',
+      ingredients: [],
+      tags: [],
     },
   });
 
@@ -141,6 +132,7 @@ const EditRecipe = () => {
       'ingredients',
       ingredientsSelected.map((ingredient: { value: number; label: string }) => ingredient.value),
     );
+    setSelectedIngredients(ingredientsSelected);
   };
 
   const handleTagChange = (tagsSelected: any) => {
@@ -148,24 +140,26 @@ const EditRecipe = () => {
       'tags',
       tagsSelected.map((tag: { value: number; label: string }) => tag.value),
     );
+    setSelectedTags(tagsSelected);
   };
 
   const onSubmit = handleSubmit(async (data) => {
     console.log(data);
-    // try {
-    //   await axios.post('http://127.0.0.1:8000/api/recipe/recipes/', data, {
-    //     headers: {
-    //       'Content-type': 'application/json',
-    //       Authorization: `Token ${getToken() as string}`,
-    //     },
-    //   });
-    //   CustomToaster('Recipe Created!', 'success');
-    //   queryClient.invalidateQueries(['recipes']);
-    //   reset();
-    //   history.push('/app/recipes');
-    // } catch (error: any) {
-    //   CustomToaster('Failed!', 'danger');
-    // }
+    try {
+      await axios.put(`http://127.0.0.1:8000/api/recipe/recipes/${params.id}/`, data, {
+        headers: {
+          'Content-type': 'application/json',
+          Authorization: `Token ${getToken() as string}`,
+        },
+      });
+      CustomToaster('Recipe Edited!', 'success');
+      queryClient.invalidateQueries(['recipe']);
+      queryClient.invalidateQueries(['recipes']);
+      reset();
+      history.push('/app/recipes');
+    } catch (error: any) {
+      CustomToaster('Failed!', 'danger');
+    }
   });
 
   return (
@@ -183,11 +177,12 @@ const EditRecipe = () => {
             <p className={`font-semibold text-sm mb-2 ${errors.ingredients && 'text-red-500'} `}>Ingredients * </p>
             <Select
               isMulti
+              name="ingredients"
               options={ingredients?.data?.map((v) => ({
                 label: v.name,
                 value: v.id,
               }))}
-              defaultValue={selectedIngredients}
+              value={selectedIngredients}
               onChange={handleIngredientChange}
               placeholder="Search Ingredients"
               className={`w-full rounded-lg border focus:outline-none focus:ring-2 focus:border-transparent ${
@@ -195,7 +190,7 @@ const EditRecipe = () => {
               }`}
             />
 
-            {/* {errors.ingredients && <p className="text-red-500 text-xs mt-1">{errors.ingredients.message}</p>} */}
+            {errors.ingredients && <p className="text-red-500 text-xs mt-1">Required</p>}
           </div>
 
           <div>
@@ -207,7 +202,7 @@ const EditRecipe = () => {
                 label: v.name,
                 value: v.id,
               }))}
-              defaultValue={selectedTags}
+              value={selectedTags}
               onChange={handleTagChange}
               placeholder="Search Tags"
               className={`w-full rounded-lg border focus:outline-none focus:ring-2 focus:border-transparent ${
@@ -215,7 +210,7 @@ const EditRecipe = () => {
               }`}
             />
 
-            {/* {errors.tags && <p className="text-red-500 text-xs mt-1">{errors.tags.message}</p>} */}
+            {errors.tags && <p className="text-red-500 text-xs mt-1">Required</p>}
           </div>
 
           <InputField
