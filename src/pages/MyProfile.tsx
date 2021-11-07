@@ -76,7 +76,7 @@ const MyProfile = () => {
     <div>
       {accountDetails.data ? (
         <form onSubmit={onSubmit} className="space-y-8 max-w-lg">
-          <h1 className="text-xl font-bold font-leading-10 mb-8">My account</h1>
+          <h1 className="text-2xl font-bold mb-6">My Account</h1>
           <InputField
             label="Email"
             {...register('email')}

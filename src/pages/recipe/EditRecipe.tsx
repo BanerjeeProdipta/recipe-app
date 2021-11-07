@@ -165,11 +165,14 @@ const EditRecipe = () => {
     }
   });
 
+  console.log('isDirty', isDirty, 'isSubmitting', isSubmitting);
+
   return (
     <div className="w-full lg:max-w-md">
-      <h1 className="text-2xl font-bold mb-6">Edit Recipe</h1>
+      <h1 className="text-2xl font-bold mb-2">Recipe Details</h1>
+      <span className="font-medium italic text-gray-400 text-xs">Please change the information to update.</span>
       {recipe.data ? (
-        <form onSubmit={onSubmit} className="lg:w-96 space-y-6">
+        <form onSubmit={onSubmit} className="lg:w-96 space-y-6 mt-4">
           <InputField
             label="Title *"
             {...register('title')}
@@ -233,24 +236,25 @@ const EditRecipe = () => {
           />
 
           <InputField label="Link" {...register('link')} />
-
-          <div className="flex justify-between space-x-4">
-            <button
-              type="button"
-              onClick={() => history.push('/app/recipes')}
-              className="mt-6 border-2 border-primary text-primary font-semibold transition duration-500 w-full py-2 rounded-lg focus:outline-none"
-            >
-              Cancel
-            </button>
-            <button
-              disabled={!isDirty && isSubmitting}
-              className={`mt-6 bg-primary text-white font-semibold transition duration-500 w-full py-2 rounded-lg focus:outline-none ${
-                isDirty ? 'opacity-100' : 'cursor-not-allowed'
-              }`}
-            >
-              {isSubmitting ? 'Updating' : 'Update'}
-            </button>
-          </div>
+          {isDirty && (
+            <div className="flex justify-between space-x-4">
+              <button
+                type="button"
+                onClick={() => history.push('/app/recipes')}
+                className="mt-6 border-2 border-primary text-primary font-semibold transition duration-500 w-full py-2 rounded-lg focus:outline-none"
+              >
+                Cancel
+              </button>
+              <button
+                disabled={!isDirty && isSubmitting}
+                className={`mt-6 bg-primary text-white font-semibold transition duration-500 w-full py-2 rounded-lg focus:outline-none ${
+                  isDirty ? 'opacity-100' : 'cursor-not-allowed'
+                }`}
+              >
+                {isSubmitting ? 'Updating' : 'Update'}
+              </button>
+            </div>
+          )}
         </form>
       ) : recipe.isLoading ? (
         <div className="h-96 flex justify-center items-center">

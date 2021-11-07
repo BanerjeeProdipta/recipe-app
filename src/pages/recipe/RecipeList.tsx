@@ -126,13 +126,12 @@ const RecipeList = () => {
             {recipes.data.map((recipe) => (
               <div key={recipe.id} className="border rounded-md my-2 p-4">
                 <div className="flex justify-between items-center">
-                  <h1 className="font-medium text-lg mb-2">{recipe.title}</h1>
-                  <div className="flex items-center">
-                    <Link to={`/app/recipes/${recipe.id}/edit`} className="text-primary font-bold text-sm mr-1">
-                      Edit
-                    </Link>
+                  <Link to={`/app/recipes/${recipe.id}/edit`}>
+                    <h1 className="font-medium text-lg mb-2 hover:underline">{recipe.title}</h1>
+                  </Link>
+                  <div>
                     <button
-                      className="text-red-600 font-bold text-sm"
+                      className="text-gray-500 font-semibold text-sm"
                       onClick={() => {
                         setShowModal(true);
                         setRecipeToDelete(recipe);

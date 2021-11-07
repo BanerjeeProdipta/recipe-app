@@ -56,7 +56,7 @@ const Login = () => {
       .then((response: any) => {
         console.log(response.data);
         setAccessToken(response.data.token);
-        history.push('/app/user/profile');
+        history.push('/app/recipes');
       })
       .catch((error: any) => {
         CustomToaster(error.response.data.non_field_errors[0] || 'Failed!', 'danger');
