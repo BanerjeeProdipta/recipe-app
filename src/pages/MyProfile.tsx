@@ -86,7 +86,7 @@ const MyProfile = () => {
           <div className="flex justify-end">
             {isDirty && (
               <button
-                disabled={!isDirty && isSubmitting}
+                disabled={!isDirty || isSubmitting}
                 className={`bg-primary text-white font-semibold transition duration-500 px-8 py-2 rounded-lg focus:outline-none ${
                   isDirty && !isSubmitting ? 'opacity-100' : 'cursor-not-allowed'
                 }`}

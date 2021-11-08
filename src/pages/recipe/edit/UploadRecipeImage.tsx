@@ -77,6 +77,7 @@ const UploadRecipeImage = ({ recipeId, recipeImage }: props) => {
             },
           },
         );
+
         queryClient.invalidateQueries(['recipe']);
         queryClient.invalidateQueries(['recipes']);
         CustomToaster('Profile updated.', 'success');

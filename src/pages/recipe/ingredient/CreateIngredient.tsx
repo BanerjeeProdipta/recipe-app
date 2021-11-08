@@ -71,7 +71,7 @@ const CreateIngredient = () => {
               Close
             </button>
             <button
-              disabled={!isDirty && isSubmitting}
+              disabled={!isDirty || isSubmitting}
               className={`mt-6 bg-primary text-white font-semibold transition duration-500 w-full py-2 rounded-lg focus:outline-none ${
                 isDirty ? 'opacity-100' : 'cursor-not-allowed'
               }`}
